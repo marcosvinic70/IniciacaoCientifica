@@ -63,7 +63,7 @@ public class TestesSolucoes
 	
 	private void escolherMelhorSolucao(Grafo grafoAux) throws CloneNotSupportedException 
 	{
-		if(grafoAux.getErroTotalCalculado() <= melhorSol.getErroTotal())
+		if(grafoAux.getErroTotalCalculado() < melhorSol.getErroTotal())
 			melhorSol = grafoAux;
 	}
 
