@@ -1,26 +1,3 @@
-/*
-4.3_01-0_loc ok
-4.3_01-1_loc ok
-4.3_01-2_loc erro
-4.3_01-3_loc ok
-4.3_01-4_loc ok
-4.3_01-5_loc ok
-4.3_01-6_loc ok
-4.3_01-7_loc ok
-4.3_01-8_loc ok
-4.3_01-9_loc ok
-4.3_02-0_loc ok
-4.3_02-1_loc ok
-4.3_02-2_loc ok
-4.3_02-3_loc ok
-4.3_02-4_loc ok
-4.3_02-5_loc erro
-4.3_02-6_loc ok
-4.3_02-7_loc erro
-4.3_02-8_loc erro
-4.3_02-9_loc ok
-
-*/
 package IC;
 
 import java.io.BufferedWriter;
@@ -38,12 +15,16 @@ public class ArquivoInstancia
 	private FileReader fr;
 	private FileWriter fw;
 	private BufferedWriter bw;
+	private String arg;
 	
-	public ArquivoInstancia()
+	public ArquivoInstancia(String args)
 	{
+		arg = args;
+		
 		try 
 		{
-			file = new File("./4.1-1_loc.txt");
+			String entrada = "./Instancias_4.3_01_e_02/".concat(arg);
+			file = new File(entrada);
 			fr = new FileReader(file);
 			scan = new Scanner(fr);
 		}
@@ -53,6 +34,7 @@ public class ArquivoInstancia
 		}
 	}
 	
+
 	public Instancia LerInstancia()
 	{
 		double rMin = Double.valueOf(scan.next());
@@ -132,7 +114,9 @@ public class ArquivoInstancia
 	{
 		try
 		{
-			file = new File("resultado.txt");
+			String nomeInstancia = arg.substring(0, (arg.indexOf("l")));
+			String saida = "./Instancias_4.3_01_e_02/".concat(nomeInstancia).concat("MyResult.txt");
+			file = new File(saida);
 			file.createNewFile();
 		
 			fw = new FileWriter(file);
@@ -143,10 +127,10 @@ public class ArquivoInstancia
 			for(Sensor s : comuns)
 			{
 				
-				String x = (String.format("%.7f", s.getPonto().getX())).replaceAll(",", ".");
-				String y = (String.format("%.7f", s.getPonto().getY())).replaceAll(",", ".");
+				String x = (String.format("%.12f", s.getPonto().getX())).replaceAll(",", ".");
+				String y = (String.format("%.12f", s.getPonto().getY())).replaceAll(",", ".");
 	
-				bw.write(x + "   " + y);
+				bw.write(x + " " + y);
 				bw.newLine();
 				
 			}

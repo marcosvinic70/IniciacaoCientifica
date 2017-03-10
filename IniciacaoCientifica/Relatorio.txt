@@ -1,0 +1,68 @@
+*Arrumar Git
+*Verificar melhor os resultados dos posicionamentos com arrayList
+*Posicionamento com 1 vizinho costuma pegar valores diferentes
+*Implementar uma solução para caso a Intersecção de 2 circulos gere 2 resultados invalidos
+
+
+
+Instancias Relatorio:
+
+4.3_01-0_loc 
+-> Priority Queue Ok / ArrayList Ok
+
+4.3_01-1_loc 
+-> Priority Queue Ok / ArrayList OK(Maior dificuldade para posicionar bem)
+
+4.3_01-2_loc 
+-> Priority Queue (bug estranho,PQ não atualizou, figuras com o PQ para mostrar o erro) / ArrayList Ok(valores muito diferentes quando usa posicionamento com 1 vizinho)
+
+4.3_01-3_loc 
+-> Priority Queue Ok / ArrayList Ok
+
+4.3_01-4_loc 
+-> Priority Queue Ok (nó 11 com erro porque ele roda com 2 vizinhos inevitavelmente e o arq result mostra outro) / ArrayList Ok
+
+4.3_01-5_loc
+-> Priority Queue Ok / ArrayList Ok(Maior dificuldade para posicionar bem)
+
+4.3_01-6_loc 
+-> Priority Queue Ok / ArrayList Ok
+
+4.3_01-7_loc 
+-> Priority Queue Ok / ArrayList Ok
+
+4.3_01-8_loc 
+-> Priority Queue Ok / ArrayList Ok
+
+4.3_01-9_loc 
+-> Priority Queue Ok / ArrayList Ok
+
+4.3_02-0_loc 
+-> Priority Queue Ok / ArrayList Ok(Não apresenta otimos resultados, pois acontece muitos posicionamentos com 1 nó vizinho)
+
+4.3_02-1_loc 
+-> Priority Queue Ok / ArrayList Ok(Não apresenta otimos resultados, pois acontece muitos posicionamentos com 1 nó vizinho)
+
+4.3_02-2_loc 
+-> Priority Queue (valor com erro no result da instancia 54) / ArrayList (valor com erro no result da instancia 54)
+
+4.3_02-3_loc 
+-> Priority Queue Ok / ArrayList Ok (Não apresenta otimos resultados, pois acontece muitos posicionamentos com 1 nó vizinho)
+
+4.3_02-4_loc 
+-> Priority Queue Ok / ArrayList Ok (Não apresenta otimos resultados, pois acontece muitos posicionamentos com 1 nó vizinho)
+
+4.3_02-5_loc 
+-> Priority Queue  / ArrayList (Bugando feio, pois o nó 0 esta recebendo 2 valores invalidos da intercecção de 2 circulos)
+
+4.3_02-6_loc 
+-> Priority Queue Ok / ArrayList Ok (Valor diferente do nó 11 por causa do posicionamento com 1 vizinho)
+
+4.3_02-7_loc 
+-> Priority Queue (bug estranho,PQ não atualizou no nó 58) / ArrayList (Não apresenta otimos resultados, pois acontece muitos posicionamentos com 1 nó vizinho)
+
+4.3_02-8_loc 
+-> Priority Queue (bug estranho,PQ não atualizou no nó 58) / ArrayList (Não apresenta otimos resultados, pois acontece muitos posicionamentos com 1 nó vizinho)
+
+4.3_02-9_loc 
+-> Priority Queue (valor com erro no result da instancia 79) / ArrayList (valor com erro no result da instancia 79)

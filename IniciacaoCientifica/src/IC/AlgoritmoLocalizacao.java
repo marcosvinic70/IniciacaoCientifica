@@ -6,8 +6,6 @@ import java.util.*;
 public class AlgoritmoLocalizacao
 {
 
-    // Obtendo muitos NaN
-   
 	public void LocalizarAncorasVizinhosTeste(Grafo grafo, Instancia regiao) 
 	{
 		ArrayList<Sensor> arraySensor = new ArrayList<>();
@@ -16,22 +14,24 @@ public class AlgoritmoLocalizacao
 		
 		Collections.shuffle(arraySensor);
 		int cont = 0;
+		for(Sensor s : arraySensor)
+			System.out.print(s.getID()+"  ");
 		
 		while(!arraySensor.isEmpty())
 		{
 			Iterator<Sensor> i = arraySensor.iterator();
 			
-			while(i.hasNext())
+			while(i.hasNext() && (cont < 10))
 			{
 				Sensor s = i.next();
 				
 
 				if((s.getNroVizinhosAncoras() + s.getNroVizinhosPos()) >= 3 && cont < 10)
 				{
-					System.out.println("\nnó com 3 ou mais vizinhos: " +  s.getID());
-
+					System.out.println("\n 3+ vizinhos\n" + s.getID());
+					s.imprimirVizinhosPos();
 					NohLista[] ancoras = s.getVizinhosAncorasNovos();
-	
+					//Por enquanto nohs com mais de 3 vizinhos, estarao sendo escolhidos aleatoriamente
 					Ponto p1 =  ancoras[0].getSensor().getPonto();
 					Ponto p2 =  ancoras[1].getSensor().getPonto();
 					Ponto p3 =  ancoras[2].getSensor().getPonto();
@@ -42,32 +42,22 @@ public class AlgoritmoLocalizacao
 					
 					Ponto pAnt = s.getPonto();
 					Ponto p = Trilateracao(p1,p2,p3,d1,d2,d3);
-					
-					if(p.getX() > 1 || p.getX() < 0 || p.getY() > 1 || p.getY() < 0)
-					{
-						cont++;
-						if(cont == 10)
-							break;
-						continue;
-						
-					}					
-						
-					
-					if(pAnt.getX() != p.getX() || pAnt.getY() != p.getY())
+					System.out.println("\n no"+" "+s.getID() + " Pontos x= : " + p.getX() + " y= " + p.getY() + "   cont= " + cont);	
+					System.out.println("Vizinhos utilizados: " + ancoras[0].getSensor().getID() + "   " +  ancoras[1].getSensor().getID() + "  " + ancoras[2].getSensor().getID() + "\n ------------------------------" );
+					if(/*Caso trilateracao retorne valor*/(pAnt.getX() != p.getX() || pAnt.getY() != p.getY()) && /*Caso esteja dentro da area*/((p.getX() >= 0  && p.getX() <= 1) && (p.getY() >= 0 && p.getY() <= 1)))
 					{
 						s.setPonto(p);
 						s.AdcionarNroDeVizinho();
 						cont = 0;
+						i.remove();
 					}
 					else
 					{
 						cont++;
-						continue;
 					}
-					
-					
-					i.remove();
+	
 				}
+
 			}
 			
 			i = arraySensor.iterator();
@@ -76,45 +66,20 @@ public class AlgoritmoLocalizacao
 			{
 				Sensor s = i.next();
 
-				if((s.getNroVizinhosAncoras() + s.getNroVizinhosPos()) == 2)
+				if(((s.getNroVizinhosAncoras() + s.getNroVizinhosPos()) == 2) || (cont == 10))
 				{
 					System.out.println("\nnó com 2 vizinhos: " +  s.getID());
-
-					i.remove();
-	
-					Random r = new Random();
+				
 					Ponto p1;
 					Ponto p2;
 					NohLista[] ancoras;
+					//Por enquanto nohs com mais de 3 vizinhos, estarao sendo escolhidos aleatoriamente
+					ancoras = s.getVizinhosAncorasNovos();
+					p1 = ancoras[0].getSensor().getPonto();
+					p2 = ancoras[1].getSensor().getPonto();
 					
-					
-					//Conflito
-					
-					/*if((s.getNroVizinhosPos() + s.getNroVizinhosAncoras()) > 2)
-					{
-						ancoras = s.getVizinhosAncorasNovos();
-						
-						System.out.println("\nnó " +  s.getID());
+					System.out.println("Vizinhos utilizados: " + ancoras[0].getSensor().getID() + "   " +  ancoras[1].getSensor().getID() +"\n ------------------------------" );
 
-						System.out.println("\n" +  s.getNroVizinhosPos());
-						
-						for(int j=0; j<(s.getNroVizinhosPos() + s.getNroVizinhosAncoras()); j++ )
-							System.out.println(ancoras[j].getSensor().getID()+"  "+ ancoras[j].getSensor().getPonto().getX()  +"  " + ancoras[j].getSensor().getPonto().getY());
-						
-						
-						p1 = ancoras[r.nextInt((s.getNroVizinhosPos() + s.getNroVizinhosAncoras()))].getSensor().getPonto();
-						p2 = ancoras[r.nextInt((s.getNroVizinhosPos() + s.getNroVizinhosAncoras()))].getSensor().getPonto();
-					}	
-					else
-					{
-					
-					}
-					*/
-						ancoras = s.getVizinhosAncorasNovos();
-						p1 = ancoras[0].getSensor().getPonto();
-						p2 = ancoras[1].getSensor().getPonto();
-					
-					
 					Ponto[] p = Interseccao2Circulos(p1,p2,regiao.getRadio());
 					
 					if(p[0].getX() > 1 || p[0].getX() < 0 || p[0].getY() > 1 || p[0].getY() < 0)
@@ -123,18 +88,26 @@ public class AlgoritmoLocalizacao
 					else if(p[1].getX() > 1 || p[1].getX() < 0 || p[1].getY() > 1 || p[1].getY() < 0)
 						s.setPonto(p[0]);
 					
-					else if((p[1].getX() > 1 || p[1].getX() < 0 || p[1].getY() > 1 || p[1].getY() < 0) || (p[0].getX() > 1 || p[0].getX() < 0 || p[0].getY() > 1 || p[0].getY() < 0))
-						break;
-					else	
-						s.setPonto(p[r.nextInt(2)]);
-						
+					else
+					{
+						double x = s.CalcularErroDaPosicao(p[0], grafo, regiao);
+						double y = s.CalcularErroDaPosicao(p[1], grafo, regiao);
+					//set a pos de menor erro	
+						if(x < y)
+							s.setPonto(p[0]);
+						else
+							s.setPonto(p[1]);
+					}
+		
 					s.AdcionarNroDeVizinho();
-					
+					if(cont == 10)cont = 0;
+					i.remove();
 				}
 
 			}
 			
 			i = arraySensor.iterator();
+			
 			while(i.hasNext())
 			{
 				Sensor s = i.next();
@@ -146,22 +119,7 @@ public class AlgoritmoLocalizacao
 					i.remove();
 					
 					NohLista n;
-					NohLista[] ancoras;
-					Random r = new Random();
-					
-					
-					//Conflito
-					/*
-					if((s.getNroVizinhosPos() + s.getNroVizinhosAncoras()) > 1)
-					{
-						ancoras = s.getVizinhosAncorasNovos();
-						n = ancoras[r.nextInt((s.getNroVizinhosPos() + s.getNroVizinhosAncoras()))];
-					}	
-					else
-					{
-					}
-					*/
-					
+					NohLista[] ancoras;						
 					ancoras = s.getVizinhosAncorasNovos();
 					n = ancoras[0];
 					
@@ -172,7 +130,8 @@ public class AlgoritmoLocalizacao
 					s.AdcionarNroDeVizinho();
 					
 				}
-				
+
+
 			}
 		}
 	}
@@ -180,7 +139,6 @@ public class AlgoritmoLocalizacao
 
 	public void LocalizarAncorasVizinhosPQ(Grafo grafo, Instancia regiao)
 	{
-    	// Obs 3: sempre que uma solução gerada (por qualquer dos métodos) estiver fora da área da rede (< 0 ou > 1) deve ser descartada
 
 		PriorityQueue<Sensor> filaSensores = new PriorityQueue<Sensor>(grafo.getNroComuns(), 
 				new Comparator<Sensor>() 
@@ -200,116 +158,118 @@ public class AlgoritmoLocalizacao
 		filaSensores.addAll(grafo.getComuns());
 		int cont = 0;
 		
-		if(filaSensores.isEmpty())return;
-		
-		while((filaSensores.peek().getNroVizinhosAncoras() + filaSensores.peek().getNroVizinhosPos()) >= 3 && cont < 50/*limite qlqer*/ )
+		while(!filaSensores.isEmpty())
 		{
-			Sensor s = filaSensores.poll();
-
-			NohLista[] ancoras = s.getVizinhosAncorasNovos();
-			Ponto p1 =  ancoras[0].getSensor().getPonto();
-			Ponto p2 =  ancoras[1].getSensor().getPonto();
-			Ponto p3 =  ancoras[2].getSensor().getPonto();
-			
-			double d1 = ancoras[0].getDist();
-			double d2 = ancoras[1].getDist();
-			double d3 = ancoras[2].getDist();
-			
-			Ponto pAnt = s.getPonto();
-			Ponto p = Trilateracao(p1,p2,p3,d1,d2,d3);
-			
-			if(pAnt.getX() != p.getX() || pAnt.getY() != p.getY())
+		
+			while(((filaSensores.peek().getNroVizinhosAncoras() + filaSensores.peek().getNroVizinhosPos()) >= 3) && (cont< 10))
 			{
-				s.setPonto(p);
-				s.AdcionarNroDeVizinho();
-				cont = 0;
+				Sensor s = filaSensores.poll();
+				System.out.println("\n 3+ vizinhos\n" + s.getID());
+				s.imprimirVizinhosPos();
+				Ponto pAnt;
+				Ponto p;
+				//Por enquanto nohs com mais de 3 vizinhos, estarao sendo escolhidos aleatoriamente
+				NohLista[] ancoras = s.getVizinhosAncorasNovos();
+				Ponto p1 =  ancoras[0].getSensor().getPonto();
+				Ponto p2 =  ancoras[1].getSensor().getPonto();
+				Ponto p3 =  ancoras[2].getSensor().getPonto();
+	
+				double d1 = ancoras[0].getDist();
+				double d2 = ancoras[1].getDist();
+				double d3 = ancoras[2].getDist();
+				
+				pAnt = s.getPonto();
+				p = Trilateracao(p1,p2,p3,d1,d2,d3);
+				
+				System.out.println("\n no"+" "+s.getID() + " Pontos x= : " + p.getX() + " y= " + p.getY() + "   cont= " + cont);	
+				System.out.println("Vizinhos utilizados: " + ancoras[0].getSensor().getID() + "   " +  ancoras[1].getSensor().getID() + "  " + ancoras[2].getSensor().getID() + "\n ------------------------------" );
+				if(/*Caso trilateracao retorne valor*/(pAnt.getX() != p.getX() || pAnt.getY() != p.getY()) && /*Caso esteja dentro da area*/((p.getX() >= 0  && p.getX() <= 1) && (p.getY() >= 0 && p.getY() <= 1)))
+				{
+					s.setPonto(p);
+					s.AdcionarNroDeVizinho();
+					cont = 0;
+				}
+				else
+				{
+					cont++;
+					filaSensores.add(s);
+				}
+				
+				if(filaSensores.isEmpty())
+						break;
+					
 			}
-			else
-			{
-				cont++;
-				filaSensores.add(s);
-			}
-
-			if(filaSensores.isEmpty())
-				break;
-
-		}
 		
-		if(filaSensores.isEmpty())return;
-		
-		
-		
-		// Obs 1: pode pegar caras que tenham mais de 2 vizinhos e, nesse caso, precisa sortear os dois que vão pegar
-		while((filaSensores.peek().getNroVizinhosAncoras() + filaSensores.peek().getNroVizinhosPos()) >= 2)
-		{
-			Sensor s = filaSensores.poll();
-			Random r = new Random();
-			Ponto p1;
-			Ponto p2;
-			NohLista[] ancoras;
+			if(filaSensores.isEmpty())return;
 			
-			if((s.getNroVizinhosPos() + s.getNroVizinhosAncoras()) > 2)
+			
+			
+			while(((filaSensores.peek().getNroVizinhosAncoras() + filaSensores.peek().getNroVizinhosPos()) == 2) || (cont == 10))
 			{
-				ancoras = s.getVizinhosAncorasNovos();
-				p1 = ancoras[r.nextInt((s.getNroVizinhosPos() + s.getNroVizinhosAncoras()))].getSensor().getPonto();
-				p2 = ancoras[r.nextInt((s.getNroVizinhosPos() + s.getNroVizinhosAncoras()))].getSensor().getPonto();
-			}	
-			else
-			{
+				Sensor s = filaSensores.poll();
+				System.out.println("\n 2 vizinhos\n" + s.getID());
+				s.imprimirVizinhosPos();
+				Ponto p1;
+				Ponto p2;
+				NohLista[] ancoras;
+				//Por enquanto nohs com mais de 3 vizinhos, estarao sendo escolhidos aleatoriamente
 				ancoras = s.getVizinhosAncorasNovos();
 				p1 = ancoras[0].getSensor().getPonto();
 				p2 = ancoras[1].getSensor().getPonto();
+				
+				System.out.println("Vizinhos utilizados: " + ancoras[0].getSensor().getID() + "   " +  ancoras[1].getSensor().getID() +"\n ------------------------------" );
+				Ponto[] p = Interseccao2Circulos(p1,p2,regiao.getRadio());
+				
+				if(p[0].getX() > 1 || p[0].getX() < 0 || p[0].getY() > 1 || p[0].getY() < 0)
+					s.setPonto(p[1]);
+				
+				else if(p[1].getX() > 1 || p[1].getX() < 0 || p[1].getY() > 1 || p[1].getY() < 0)
+					s.setPonto(p[0]);
+				else
+				{
+					double x = s.CalcularErroDaPosicao(p[0], grafo, regiao);
+					double y = s.CalcularErroDaPosicao(p[1], grafo, regiao);
+				//set a pos de menor erro	
+					if(x < y)
+						s.setPonto(p[0]);
+					else
+						s.setPonto(p[1]);
+				}
+
+				
+				
+				s.AdcionarNroDeVizinho();
+				
+				if(cont == 10)cont = 0;
+				
+				if(filaSensores.isEmpty())
+					break;
+	
 			}
 			
-			Ponto[] p = Interseccao2Circulos(p1,p2,regiao.getRadio());
+			if(filaSensores.isEmpty())return;
 			
-			if(p[0].getX() > 1 || p[0].getX() < 0 || p[0].getY() > 1 || p[0].getY() < 0)
-				s.setPonto(p[1]);
-			
-			else if(p[1].getX() > 1 || p[1].getX() < 0 || p[1].getY() > 1 || p[1].getY() < 0)
-				s.setPonto(p[0]);
-			
-			else
-				s.setPonto(p[r.nextInt(2)]);
-				
-			s.AdcionarNroDeVizinho();
-			
-			if(filaSensores.isEmpty())
-				break;
-
-		}
-		
-		if(filaSensores.isEmpty())return;
-		
-		// Obs 2: mesma anotação do while anterior
-		while((filaSensores.peek().getNroVizinhosAncoras() + filaSensores.peek().getNroVizinhosPos()) >= 1)
-		{
-			Sensor s = filaSensores.poll();
-			NohLista n;
-			NohLista[] ancoras;
-			Random r = new Random();
-
-			if((s.getNroVizinhosPos() + s.getNroVizinhosAncoras()) > 1)
+			while((filaSensores.peek().getNroVizinhosAncoras() + filaSensores.peek().getNroVizinhosPos()) == 1)
 			{
-				ancoras = s.getVizinhosAncorasNovos();
-				n = ancoras[r.nextInt((s.getNroVizinhosPos() + s.getNroVizinhosAncoras()))];
-			}	
-			else
-			{
+				Sensor s = filaSensores.poll();
+				System.out.println("\n 1 vizinho\n" + s.getID());
+				s.imprimirVizinhosPos();
+				NohLista n;
+				NohLista[] ancoras;
+	
 				ancoras = s.getVizinhosAncorasNovos();
 				n = ancoras[0];
-			}
-			
-			Ponto p = PosicionarCom1Vizinho(n,s,grafo,regiao);
-			
-			s.setPonto(p);
-			s.AdcionarNroDeVizinho();
-			
-			if(filaSensores.isEmpty())
-				break;
 
+				Ponto p = PosicionarCom1Vizinho(n,s,grafo,regiao);
+				
+				s.setPonto(p);
+				s.AdcionarNroDeVizinho();
+				
+				if(filaSensores.isEmpty())
+					break;
+	
+			}
 		}
-		
 	}
 	
 	
@@ -320,10 +280,8 @@ public class AlgoritmoLocalizacao
 		Ponto Aux = new Ponto(A.getX(),A.getY());
 		
 		double erroMin = Double.MAX_VALUE;
-		
-		// Obs 5: alterado para 360 e mais abaixo coordenada somada com do nó N
-		
-		for(int i = 5; i < 360; i+=5)
+				
+		for(int i = 0; i < 360; i++)
 		{		
 			double erro = s.CalcularErroMin1Vizinho(Aux,grafo,regiao);
 			

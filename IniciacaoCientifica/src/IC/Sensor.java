@@ -11,8 +11,8 @@ public class Sensor
 	private int ID;
 	private Ponto ponto;
 	private boolean ehAncora;
-	private HashMap<Object,NohLista> vizinhosComuns;
-	private HashMap<Object,NohLista> vizinhosAncoras;
+	private HashMap<Integer,NohLista> vizinhosComuns;
+	private HashMap<Integer,NohLista> vizinhosAncoras;
 	private int nroVizinhosPos;
 	private double erroDaPosicao;
 	
@@ -21,8 +21,8 @@ public class Sensor
 		ponto = new Ponto(x,y);
 		this.ID = ID;
 		this.ehAncora = ehAncora;
-		vizinhosComuns = new HashMap<Object,NohLista>();
-		vizinhosAncoras = new HashMap<Object,NohLista>();	
+		vizinhosComuns = new HashMap<Integer,NohLista>();
+		vizinhosAncoras = new HashMap<Integer,NohLista>();	
 	}
 
 	public void	adicionarVizinho(Sensor vizinho, double distancia)
@@ -61,7 +61,6 @@ public class Sensor
 		else if(c.size() == 1)
 		{
 			Iterator<NohLista> i = c.iterator();
-			
 			n = new NohLista[]{i.next()};
 			return n;
 		}
@@ -171,13 +170,8 @@ public class Sensor
 			}
 		}
 		erroDaPosicao = erro;
-		
-		String res = String.format("%.2f",erro);
-		
-		res = res.replace(",",".");
-		Double er = Double.parseDouble(res);
-		
-		return er;
+
+		return erro;
 		
 	}
 	
@@ -258,7 +252,27 @@ public class Sensor
 			System.out.print(n.getSensor().getID() + " ");
 		}
 	}
-	
+	public void imprimirVizinhosPos()
+	{
+		System.out.print("Vizinhos comuns posicionados: ");
+
+		Collection<NohLista> a = vizinhosComuns.values();
+		
+		for(NohLista x : a)
+		{
+			if(x.getSensor().getPonto().getX() != -1)
+			System.out.print(x.getSensor().getID() + " ");
+		}	
+
+		System.out.print("\n        Vizinhos ancoras: ");
+		
+		Collection<NohLista> c = vizinhosAncoras.values();
+		
+		for(NohLista n : c)
+		{
+			System.out.print(n.getSensor().getID() + " ");
+		}
+	}	
  	public Ponto getPonto()
 	{
 		return ponto;
@@ -294,7 +308,7 @@ public class Sensor
 		this.nroVizinhosPos = nroVizinhosPos;
 	}
 
-	public HashMap<Object, NohLista> getVizinhosComuns()
+	public HashMap<Integer, NohLista> getVizinhosComuns()
 	{
 		return vizinhosComuns;
 	}
