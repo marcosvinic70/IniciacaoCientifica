@@ -118,7 +118,7 @@ public class ArquivoInstancia
 			String saida = "./Instancias_4.3_01_e_02/".concat(nomeInstancia).concat("MyResult.txt");
 			file = new File(saida);
 			file.createNewFile();
-		
+			
 			fw = new FileWriter(file);
 			bw = new BufferedWriter(fw);
 	

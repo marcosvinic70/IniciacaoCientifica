@@ -13,7 +13,7 @@ public class Programa
 		TestesSolucoes testes = new TestesSolucoes(grafoBase,regiao);
 		
 		testes.LocalizarAncorasVizinhosPQ();
-		
+	
 		
 		//if(regiao.getRuido() > 0)
 		//{

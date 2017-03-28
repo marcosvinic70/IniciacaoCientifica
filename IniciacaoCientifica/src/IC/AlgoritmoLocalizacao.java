@@ -5,13 +5,12 @@ import java.util.*;
 
 public class AlgoritmoLocalizacao
 {
-
+	ArrayList<Sensor> aux = new ArrayList<>();
 	public void LocalizarAncorasVizinhosTeste(Grafo grafo, Instancia regiao) 
 	{
 		ArrayList<Sensor> arraySensor = new ArrayList<>();
 		
 		arraySensor.addAll(grafo.getComuns());
-		
 		Collections.shuffle(arraySensor);
 		int cont = 0;
 		for(Sensor s : arraySensor)
@@ -80,7 +79,7 @@ public class AlgoritmoLocalizacao
 					
 					System.out.println("Vizinhos utilizados: " + ancoras[0].getSensor().getID() + "   " +  ancoras[1].getSensor().getID() +"\n ------------------------------" );
 
-					Ponto[] p = Interseccao2Circulos(p1,p2,regiao.getRadio());
+					Ponto[] p = Interseccao2Circulos(p1,p2,ancoras[0].getDist(),ancoras[1].getDist() );
 					
 					if(p[0].getX() > 1 || p[0].getX() < 0 || p[0].getY() > 1 || p[0].getY() < 0)
 						s.setPonto(p[1]);
@@ -197,7 +196,12 @@ public class AlgoritmoLocalizacao
 				
 				if(filaSensores.isEmpty())
 						break;
-					
+				
+				//atualizar PQ
+				for(int i = 0; i < filaSensores.size(); i++)
+					aux.add(filaSensores.poll());
+				filaSensores.addAll(aux);
+				aux.clear();
 			}
 		
 			if(filaSensores.isEmpty())return;
@@ -217,8 +221,8 @@ public class AlgoritmoLocalizacao
 				p1 = ancoras[0].getSensor().getPonto();
 				p2 = ancoras[1].getSensor().getPonto();
 				
-				System.out.println("Vizinhos utilizados: " + ancoras[0].getSensor().getID() + "   " +  ancoras[1].getSensor().getID() +"\n ------------------------------" );
-				Ponto[] p = Interseccao2Circulos(p1,p2,regiao.getRadio());
+				System.out.println("Vizinhos utilizados: " + ancoras[0].getSensor().getID() + "   Distancia:  " +ancoras[0].getDist() + "     " +  ancoras[1].getSensor().getID() + "   Distancia:  " +ancoras[1].getDist() + "\n ------------------------------" );
+				Ponto[] p = Interseccao2Circulos(p1,p2,ancoras[0].getDist(),ancoras[1].getDist() );
 				
 				if(p[0].getX() > 1 || p[0].getX() < 0 || p[0].getY() > 1 || p[0].getY() < 0)
 					s.setPonto(p[1]);
@@ -244,7 +248,12 @@ public class AlgoritmoLocalizacao
 				
 				if(filaSensores.isEmpty())
 					break;
-	
+				
+				//atualizar PQ
+				for(int i = 0; i < filaSensores.size(); i++)
+					aux.add(filaSensores.poll());
+				filaSensores.addAll(aux);
+				aux.clear();
 			}
 			
 			if(filaSensores.isEmpty())return;
@@ -267,7 +276,12 @@ public class AlgoritmoLocalizacao
 				
 				if(filaSensores.isEmpty())
 					break;
-	
+				
+				//atualizar PQ
+				for(int i = 0; i < filaSensores.size(); i++)
+					aux.add(filaSensores.poll());
+				filaSensores.addAll(aux);
+				aux.clear();
 			}
 		}
 	}
@@ -302,15 +316,15 @@ public class AlgoritmoLocalizacao
 		return A;
 	}
 
-	private Ponto[] Interseccao2Circulos(Ponto p1, Ponto p2, double r) 
+	private Ponto[] Interseccao2Circulos(Ponto p1, Ponto p2, double r1, double r2) 
 	{
 		/*
 		https://stackoverflow.com/questions/3349125/circle-circle-intersection-points
 		https://fypandroid.wordpress.com/2011/07/03/how-to-calculate-the-intersection-of-two-circles-java/
 		*/
         double d = p1.Distancia2Pt(p2);
-        double a = (r*r - r*r + d*d)/(2*d);
-        double h = Math.sqrt(r*r - a*a);
+        double a = (r1*r1 - r2*r2 + d*d)/(2*d);
+        double h = Math.sqrt(r1*r1 - a*a);
         double p3x = p1.getX() + (((p2.getX() - p1.getX())* a) /d);
         double p3y = p1.getY() + (((p2.getY() - p1.getY())* a) /d);
         

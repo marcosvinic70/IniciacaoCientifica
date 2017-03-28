@@ -170,7 +170,7 @@ public class Sensor
 			}
 		}
 		erroDaPosicao = erro;
-
+		System.out.println("\n errooooooooooooooooooooooo " + erro);
 		return erro;
 		
 	}
